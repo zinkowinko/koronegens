@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Mirrored from koronebots.zinkos.fun/ by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 09 Feb 2026 06:23:29 GMT -->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KORONE FOLLOW BOTTER</title>
+    <style>
+        /* General Reset */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: url('bg.jpg') no-repeat center center fixed; 
+            background-size: cover;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: #333;
+            padding-top: 120px;
+            padding-bottom: 50px;
+        }
+
+        .logo-container {
+            position: absolute;
+            top: 20px;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            z-index: 10;
+        }
+        
+        .logo-container img {
+            max-width: 350px;
+            height: auto;
+            filter: drop-shadow(0 5px 5px rgba(0,0,0,0.5));
+        }
+
+        .generator-container {
+            background-color: #f2f2f2;
+            width: 95%;
+            max-width: 500px;
+            border-radius: 4px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .header {
+            background-color: #00bd09; /* Updated Red */
+            padding: 18px;
+            text-align: center;
+            color: white;
+            border-bottom: 5px solid #00bd09;
+        }
+
+        .header h1 {
+            font-size: 1.4rem;
+            text-transform: uppercase;
+            font-weight: 800;
+        }
+
+        .content {
+            padding: 20px 25px;
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 0.9rem;
+            margin-bottom: 6px;
+            font-weight: 600;
+            color: #222;
+        }
+
+        .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+            width: 100%;
+        }
+
+        .input-wrapper input {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 1rem;
+            outline: none;
+            background: #fff;
+        }
+
+        .currency-badge {
+            position: absolute;
+            right: 10px;
+            background: #28a745;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 3px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            pointer-events: none;
+        }
+        
+        .tix-badge { background: #e0a800; }
+
+        .warning-yellow { border: 2px solid #f1c40f !important; color: #d4ac0d !important; }
+        .warning-red { border: 2px solid #905A4E !important; color: #00bd09 !important; }
+
+        .user-row {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .game-icon {
+            width: 75px;
+            height: 75px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            background: #fff;
+            object-fit: cover;
+        }
+
+        .note {
+            font-size: 0.75rem;
+            color: #777;
+            margin-top: 3px;
+        }
+
+        hr { border: 0; border-top: 1px solid #ddd; margin: 20px 0; }
+
+        .toggle-group { margin-bottom: 15px; }
+
+        .toggle-label {
+            display: block;
+            font-size: 0.85rem;
+            margin-bottom: 6px;
+            font-weight: 500;
+            color: #444;
+        }
+
+        .toggle-bar {
+            background: #e6e6e6;
+            padding: 10px 12px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border: 1px solid #dcdcdc;
+        }
+
+        .fake-switch {
+            width: 55px;
+            height: 26px;
+            background-color: transparent; 
+            border: 2px solid #0074BD; /* Updated Red */
+            border-radius: 20px;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .fake-switch.active { 
+            background-color: #4cd964; 
+            border-color: #4cd964;
+        }
+
+        .fake-switch::before {
+            content: 'OFF';
+            position: absolute;
+            right: 6px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 9px;
+            color: #0074BD; /* Updated Red */
+            font-weight: bold;
+            transition: color 0.3s;
+        }
+
+        .fake-switch.active::before {
+            content: 'ON';
+            left: 7px;
+            right: auto;
+            color: white;
+        }
+
+        .knob {
+            width: 18px;
+            height: 18px;
+            background: #0074BD; /* Updated Red */
+            border-radius: 50%;
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .active .knob { 
+            left: calc(100% - 22px); 
+            background: white; 
+        }
+
+        /* Fixed Chat Widget in Bottom Right */
+        .chat-container {
+            position: fixed;
+            bottom: 0px; 
+            right: 20px;
+            width: 280px;
+            background: #fff;
+            border: 1px solid #ccc;
+            border-radius: 8px 8px 0 0;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+            z-index: 100;
+            overflow: hidden;
+            opacity: 0.5; 
+            transition: opacity 0.3s ease;
+        }
+
+        .chat-container:hover, .chat-container:focus-within {
+            opacity: 1;
+        }
+
+        .chat-header {
+            background: #00bd09; /* Updated Red */
+            color: white;
+            padding: 10px 15px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            cursor: pointer;
+        }
+
+        .chat-messages {
+            height: 220px;
+            overflow-y: auto;
+            padding: 12px;
+            background: #fdfdfd;
+            font-size: 0.8rem;
+        }
+
+        .chat-msg {
+            margin-bottom: 8px;
+            line-height: 1.4;
+            border-bottom: 1px solid #f0f0f0;
+            padding-bottom: 4px;
+        }
+
+        .chat-user {
+            font-weight: bold;
+            color: #00bd09; /* Updated Red */
+            display: block;
+        }
+
+        .chat-input-area {
+            border-top: 1px solid #ddd;
+            display: flex;
+            padding: 8px;
+            background: #eee;
+        }
+
+        .chat-input-area input {
+            flex-grow: 1;
+            border: 1px solid #ccc;
+            padding: 6px;
+            font-size: 0.8rem;
+            outline: none;
+            border-radius: 4px;
+        }
+
+        .chat-send {
+            background: #00bd09; /* Updated Red */
+            color: white;
+            border: none;
+            padding: 0 12px;
+            margin-left: 5px;
+            cursor: pointer;
+            font-size: 0.7rem;
+            font-weight: bold;
+            border-radius: 4px;
+        }
+
+        .footer {
+            background-color: #f9f9f9;
+            padding: 15px 25px;
+            border-top: 1px solid #ddd;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .stats { font-size: 0.7rem; color: #666; line-height: 1.5; }
+        .stats strong { color: #00bd09; } /* Updated Red */
+
+        .btn-generate {
+            background-color: #00bd09; /* Updated Red */
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            font-weight: bold;
+            text-transform: uppercase;
+            border-radius: 0;
+            cursor: pointer;
+            box-shadow: 0 3px 0 #00bd09;
+        }
+
+        #overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.85);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #popup {
+            background: #fff;
+            width: 280px;
+            height: 280px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            border-radius: 0; 
+            box-shadow: 0 0 25px rgba(0,0,0,0.7);
+            padding: 20px;
+        }
+
+        .rotate {
+            animation: rotation 1s infinite linear;
+            width: 60px;
+            height: 60px;
+            margin-bottom: 20px;
+        }
+
+        @keyframes rotation {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(359deg); }
+        }
+
+        .status-msg {
+            font-weight: bold;
+            font-size: 1.1rem;
+            color: #333;
+        }
+
+        #close-btn {
+            margin-top: 15px;
+            padding: 8px 20px;
+            background: #333;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            text-transform: uppercase;
+            font-weight: bold;
+            font-size: 0.8rem;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="logo-container"><img src="logo.png" alt="KORONE"></div>
+
+    <div id="overlay">
+        <div id="popup">
+            <img src="loading.png" class="rotate" id="popup-loading">
+            <div id="popup-status" class="status-msg">Contacting servers...</div>
+            <button id="close-btn" style="display:none;" onclick="closePopup()">Close</button>
+        </div>
+    </div>
+
+    <div class="generator-container">
+        <div class="header"><h1>KORONE FOLLOW BOTTER</h1></div>
+
+        <div class="content">
+            <div class="input-group">
+                <label>Enter Username</label>
+                <div class="user-row">
+                    <div class="input-wrapper" style="flex-grow: 1;">
+                        <input type="text" placeholder="Username" id="username-input">
+                    </div>
+                    <img src="game_icon.png" class="game-icon">
+                </div>
+                <div class="note">You can Follow Bot your friends too</div>
+            </div>
+
+
+            <hr>
+            <div class="input-group">
+                <label>Insert the amount of Followers to Bot towards the account.</label>
+                <div class="input-wrapper">
+                    <input type="number" id="rbx-input" value="0" oninput="validateInput(this, 'rbx')">
+                    <span class="currency-badge">BOTS</span>
+                </div>
+                <div class="note">Note: There is no limit on the number of bots you can send.</div>
+            </div>
+            <hr>
+
+            <div class="toggle-group">
+                <span class="toggle-label">Select if you want Activate Anti Ban Protection</span>
+                <div class="toggle-bar">
+                    <img src="shield.png">
+                    <div class="fake-switch" onclick="this.classList.toggle('active')"><div class="knob"></div></div>
+                </div>
+            </div>
+
+            <div class="toggle-group">
+                <span class="toggle-label">Select if you want to use Proxy</span>
+                <div class="toggle-bar">
+                    <img src="proxy.png">
+                    <div class="fake-switch" onclick="this.classList.toggle('active')"><div class="knob"></div></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <div class="stats">
+                Tool Updated: <strong id="date-display">...</strong><br>
+                People botted today: <strong id="gen-count">...</strong><br>
+                Users Online: <strong id="online-count">798</strong>
+            </div>
+            <button class="btn-generate" onclick="handleGenerate()">Follow</button>
+        </div>
+    </div>
+
+    <div class="chat-container">
+        <div class="chat-header">Live Activity Chat (8)</div>
+        <div class="chat-messages" id="chat-box">
+            <div class="chat-msg"><span class="chat-user">Builderman12</span> just got me and my friends alot of follows! thanks!!</div>
+            <div class="chat-msg"><span class="chat-user">KORONELover</span> it works guys!</div>
+            <div class="chat-msg"><span class="chat-user">Guest_492</span> best botter ever 10/10</div>
+            <div class="chat-msg"><span class="chat-user">ProGamer01</span> took a while but it works</div>
+            <div class="chat-msg"><span class="chat-user">NoobKiller</span> legit.</div>
+        </div>
+        <div class="chat-input-area">
+            <input type="text" placeholder="Type a message...">
+            <button class="chat-send">SEND</button>
+        </div>
+    </div>
+
+    <script>
+        function validateInput(el, type) {
+            const val = parseInt(el.value) || 0;
+            const limit = 10000;
+            const max = 100000;
+
+            el.classList.remove('warning-yellow', 'warning-red');
+            
+            if (val >= max) {
+                el.classList.add('warning-red');
+            } else if (val >= limit) {
+                el.classList.add('warning-yellow');
+            }
+        }
+
+        function handleGenerate() {
+    const username = document.getElementById('username-input').value.trim();
+
+    if (!username) {
+        alert("Please enter a username before follow botting!");
+        return;
+    }
+
+            document.getElementById('overlay').style.display = 'flex';
+            document.getElementById('popup-status').textContent = "Botting Account...";
+            document.getElementById('popup-status').style.color = "#333";
+            document.getElementById('popup-loading').style.display = "block";
+            document.getElementById('close-btn').style.display = "none";
+
+            setTimeout(() => {
+                document.getElementById('popup-loading').style.display = "none";
+                document.getElementById('popup-status').textContent = "Successfully began botting account!";
+                document.getElementById('popup-status').style.color = "green";
+                document.getElementById('close-btn').style.display = "block";
+            }, 3000);
+        }
+
+        function closePopup() {
+            document.getElementById('overlay').style.display = 'none';
+        }
+
+        const dateEl = document.getElementById('date-display');
+        const now = new Date();
+        now.setDate(now.getDate() - 1);
+        dateEl.textContent = now.toLocaleDateString('en-US', { year: '2-digit', month: '2-digit', day: '2-digit' });
+
+        const genCountEl = document.getElementById('gen-count');
+        let currentGenerated = parseInt(localStorage.getItem('mock_robux_generated')) || 1500000;
+        
+        function updateCounter() {
+            const increment = Math.floor(Math.random() * (12000 - 8000) + 8000);
+            currentGenerated += increment;
+            localStorage.setItem('mock_robux_generated', currentGenerated);
+            genCountEl.textContent = currentGenerated.toLocaleString();
+        }
+
+        setInterval(updateCounter, 1500);
+        updateCounter();
+
+        const onlineCountEl = document.getElementById('online-count');
+        setInterval(() => {
+            let val = parseInt(onlineCountEl.textContent) + (Math.random() > 0.5 ? 1 : -1);
+            if (val > 801) val = 801; if (val < 795) val = 795;
+            onlineCountEl.textContent = val;
+        }, 1000);
+
+        const chatBox = document.getElementById('chat-box');
+        chatBox.scrollTop = chatBox.scrollHeight;
+    </script>
+<script defer src="https://static.cloudflareinsights.com/beacon.min.js/vcd15cbe7772f49c399c6a5babf22c1241717689176015" integrity="sha512-ZpsOmlRQV6y907TI0dKBHq9Md29nnaEIPlkf84rnaERnq6zvWvPUqr2ft8M1aS28oN72PdrCzSjY4U6VaAw1EQ==" data-cf-beacon='{"version":"2024.11.0","token":"836360b845994d3bb5db96d021c18b14","r":1,"server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
+</body>
+
+<!-- Mirrored from koronebots.zinkos.fun/ by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 09 Feb 2026 06:23:31 GMT -->
+</html>
